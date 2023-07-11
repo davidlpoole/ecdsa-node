@@ -1,3 +1,21 @@
+## Project 1 Goal: ECDSA
+
+This project begins with a client that is allowed to transfer any funds from any account to another account. That's not very secure. By applying digital signatures we can require that only the user with the appropriate private key can create a signature that will allow them to move funds from one account to the other. Then, the server can verify the signature to move funds from one account to another.
+- Incorporate Public Key Cryptography so transfers can only be completed with a valid signature 
+- The person sending the transaction should have to verify that they own the private key corresponding to the address that is sending funds
+
+### My solution
+
+Implement an offline script `/server/scripts/signTransactionsOffline.js` which allows a user to sign a message with the transaction info included:
+- recipient wallet address
+- amount to transfer
+- sender's current wallet balance (to prevent replay attack, see below)
+
+The server can recreate this object and check the signature was created using the sender's private key (recover key from signature).
+
+If someone were to intercept the signature, they might be able to replay a transaction with these same details (they wouldn't be able to change the sender/receiver/amount), but by including the sender's balance, once the transaction is completed it's unlikely the sender's balance would now match therefore the signature would not match and a transaction could not be completed.
+Additionally, in a real use case, information from the blockchain could be included in the object, which would also prevent replay attacks.
+
 ## ECDSA Node
 
 This project is an example of using a client and server to facilitate transfers between different addresses. Since there is just a single server on the back-end handling transfers, this is clearly very centralized. We won't worry about distributed consensus for this project.
